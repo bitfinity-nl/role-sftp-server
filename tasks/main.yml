@@ -7,3 +7,53 @@
 # Description:
 #   SFTP server with SFTP Chroot Jail
 #
+
+- name: "Install APT packages"
+  apt:
+    pkg:
+    - openssh-server
+
+- name: "Create SFTP group"
+  group:
+    name: sftponly
+    state: present
+      
+- name: "Add users to primary SFTP group"
+  user:
+    name: "{{ user }}"
+    comment: "{{ comment }}"
+    shell: /bin/false
+    group: sftponly
+
+- name: "Add users to home"
+  file:
+    path: "/home/{{ user }}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Create upload directory in homedirectory "
+  file:
+    path: "/home/{{ user }}/uploads"
+    owner: root
+    group: sftponly
+    mode: '0755'
+
+- name: "Configure #Subsystem sftp internal-sftp to Subsystem sftp internal-sftp in /etc/ssh/sshd_config"
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '#Subsystem       sftp    /usr/lib/openssh/sftp-server'
+    replace: 'Subsystem       sftp    /usr/lib/openssh/sftp-server'
+    backup: yes
+ 
+- name: Insert/Update "Match User" configuration block in /etc/ssh/sshd_config
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK - for SFTP chrooted jail-->"
+    block: |
+      Match Group sftponly
+        ChrootDirectory %h
+        ForceCommand internal-sftp
+        AllowTcpForwarding no
+        X11Forwarding no
+
