@@ -20,21 +20,21 @@
       
 - name: "Add users to primary SFTP group"
   user:
-    name: "{{ user }}"
+    name: "{{ sftp_user }}"
     comment: "{{ comment }}"
     shell: /bin/false
     group: sftponly
 
 - name: "Add users to home"
   file:
-    path: "/home/{{ user }}"
+    path: "/home/{{ sftp_user }}"
     owner: root
     group: root
     mode: '0755'
 
 - name: "Create upload directory in homedirectory "
   file:
-    path: "/home/{{ user }}/uploads"
+    path: "/home/{{ sftp_user }}/uploads"
     owner: root
     group: sftponly
     mode: '0755'
