@@ -1,4 +1,13 @@
+
 ---
+# Title: role-sftp-server
+#
+# Author: Bitfinity-NL / L. Rutten
+# File: handlers/main.yml
+#
+# Description:
+#   SFTP server with SFTP Chroot Jail
+#
 
 - name: "restart_sshd"
   systemd:
