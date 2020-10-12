@@ -1,0 +1,13 @@
+---
+# Title: pb-<name>.yml
+#
+# Author: Bitfinity-NL / L. Rutten
+# File: pb-<name>.yml
+#
+# Description:
+#   Playbook deploying SFTP server.
+#
+
+- hosts: localhost
+  connection: local
+  become: true
