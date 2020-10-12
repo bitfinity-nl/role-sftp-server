@@ -56,4 +56,7 @@
         ForceCommand internal-sftp
         AllowTcpForwarding no
         X11Forwarding no
+    notify:
+      - restart_sshd
+
 
